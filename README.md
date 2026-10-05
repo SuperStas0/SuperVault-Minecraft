@@ -7,3 +7,12 @@ Adds upgradable vault that can keep infinite items with search and filter tabs
 Minecraft 1.21.11
 Fabric
 Download .jar file and move to `/mods/` folder
+
+# Building
+## Requirements
+- Java 21
+- Internet
+
+## Building
+Run `gradlew.bat build` in terminal in directory
+Output would be in `build/libs`

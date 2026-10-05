@@ -1,0 +1,16 @@
+# Gradle / Loom
+.gradle/
+build/
+run/
+out/
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+bin/
