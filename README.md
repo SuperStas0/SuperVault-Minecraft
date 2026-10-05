@@ -1,2 +1,9 @@
-# Minecraft-SuperVault
-Mod for Minecraft that adds Super Vault
+# Super Vault
+Mod for Minecraft
+Strongly inspired by Terraria's Magic Storage mod
+Adds upgradable vault that can keep infinite items with search and filter tabs
+
+# Installation
+Minecraft 1.21.11
+Fabric
+Download .jar file and move to `/mods/` folder
