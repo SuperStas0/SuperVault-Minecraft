@@ -1,6 +1,8 @@
 # Super Vault
 Mod for Minecraft
+
 Strongly inspired by Terraria's Magic Storage mod
+
 Adds upgradable vault that can keep infinite items with search and filter tabs
 
 # Installation
@@ -14,5 +16,5 @@ Download .jar file and move to `/mods/` folder
 - Internet
 
 ## Building
-Run `gradlew.bat build` in terminal in directory
-Output would be in `build/libs`
+1. Run `gradlew.bat build` in terminal in directory
+2. Output would be in `build/libs`
