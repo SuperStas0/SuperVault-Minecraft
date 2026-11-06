@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "magicvault:block/vault_top",
+    "side": "magicvault:block/vault_side"
+  }
+}

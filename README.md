@@ -80,6 +80,13 @@ Notes:
 
 Requirements: Java 21, internet (first build downloads dependencies).
 
+Keep the project path plain: letters, digits, `_`, `-` and `.` only. `build.bat` refuses to run otherwise.
+- `!` breaks the build with `Provider "jar" not found` (e.g. `C:\home\!\...`).
+- Non-ASCII characters are a known Fabric tooling problem.
+- Spaces and other special characters are avoided as a precaution.
+
+The same applies to the Gradle home (`%USERPROFILE%\.gradle`). If your user name breaks it, set the `GRADLE_USER_HOME` environment variable to a plain path.
+
 Run `build.bat [task]` from the project directory:
 
 | Task | Action |

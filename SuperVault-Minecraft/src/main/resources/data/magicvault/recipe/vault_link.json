@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " D ",
+    "DED",
+    " D "
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "E": "minecraft:ender_eye"
+  },
+  "result": {
+    "id": "magicvault:vault_link",
+    "count": 1
+  }
+}

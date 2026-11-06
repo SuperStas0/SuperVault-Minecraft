@@ -2,6 +2,15 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 
+set "HERE=%~dp0"
+if not "%HERE:!=%"=="%HERE%" goto :badpath
+if not "%HERE: =%"=="%HERE%" goto :badpath
+where powershell >nul 2>&1 || goto :pathok
+powershell -NoProfile -Command "if ($env:HERE -notmatch '^[A-Za-z]:[A-Za-z0-9_.\\-]*$') { exit 1 }"
+if errorlevel 1 goto :badpath
+
+:pathok
+
 rem ---- config ----
 set "MOD_FILE=supervault"
 set "MIN_JAVA=21"
@@ -86,4 +95,10 @@ exit /b 1
 
 :copyfail
 echo Copy to %MODS_DIR% failed.
+exit /b 1
+
+:badpath
+echo Unsafe project path: "%HERE%"
+echo Gradle and Loom can fail on "!", spaces and non-ASCII characters in the path.
+echo Use only letters, digits, "_", "-" and "." in folder names, e.g. C:\dev\SuperVault-Minecraft
 exit /b 1
