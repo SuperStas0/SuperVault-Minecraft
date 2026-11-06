@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -54,6 +55,14 @@ public class MagicVault implements ModInitializer {
 		.networkSynchronized(StorageSnapshot.STREAM_CODEC)
 		.build();
 
+	public static final DataComponentType<VaultLinkData> LINK_DATA = DataComponentType.<VaultLinkData>builder()
+		.persistent(VaultLinkData.CODEC)
+		.networkSynchronized(VaultLinkData.STREAM_CODEC)
+		.build();
+
+	public static final ResourceKey<Item> VAULT_LINK_KEY = ResourceKey.create(Registries.ITEM, id("vault_link"));
+	public static final Item VAULT_LINK_ITEM = new VaultLinkItem(new Item.Properties().setId(VAULT_LINK_KEY).stacksTo(1).rarity(Rarity.RARE));
+
 	@Override
 	public void onInitialize() {
 		Registry.register(BuiltInRegistries.BLOCK, VAULT_BLOCK_KEY, VAULT_BLOCK);
@@ -61,6 +70,8 @@ public class MagicVault implements ModInitializer {
 		Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id("vault"), VAULT_BE);
 		Registry.register(BuiltInRegistries.MENU, id("vault"), VAULT_MENU);
 		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("storage"), STORAGE_DATA);
+		Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id("link"), LINK_DATA);
+		Registry.register(BuiltInRegistries.ITEM, VAULT_LINK_KEY, VAULT_LINK_ITEM);
 
 		PayloadTypeRegistry.playS2C().register(SyncPayload.TYPE, SyncPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(ActionPayload.TYPE, ActionPayload.CODEC);
@@ -74,5 +85,6 @@ public class MagicVault implements ModInitializer {
 		});
 
 		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(entries -> entries.accept(VAULT_ITEM));
+		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(VAULT_LINK_ITEM));
 	}
 }

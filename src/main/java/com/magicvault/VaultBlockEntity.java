@@ -55,4 +55,25 @@ public class VaultBlockEntity extends BlockEntity implements ExtendedScreenHandl
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new VaultMenu(syncId, inventory, worldPosition);
 	}
+
+	/** Menu provider for opening this vault from afar (Vault Link): no distance check, chunk kept loaded. */
+	public ExtendedScreenHandlerFactory<BlockPos> remoteFactory() {
+		return new ExtendedScreenHandlerFactory<BlockPos>() {
+			@Override
+			public BlockPos getScreenOpeningData(ServerPlayer player) {
+				return VaultBlockEntity.this.getBlockPos();
+			}
+
+			@Override
+			public Component getDisplayName() {
+				return VaultBlockEntity.this.getDisplayName();
+			}
+
+			@Nullable
+			@Override
+			public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+				return new VaultMenu(syncId, inventory, VaultBlockEntity.this.getBlockPos(), VaultBlockEntity.this);
+			}
+		};
+	}
 }

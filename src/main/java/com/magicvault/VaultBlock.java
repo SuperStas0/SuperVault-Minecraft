@@ -5,7 +5,9 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,6 +41,27 @@ public class VaultBlock extends BaseEntityBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new VaultBlockEntity(pos, state);
+	}
+
+	/** A Vault Link used on a fully upgraded vault binds to it. On any other vault the menu opens as usual. */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!stack.is(MagicVault.VAULT_LINK_ITEM)) {
+			return super.useItemOn(stack, state, level, pos, player, hand, hit);
+		}
+
+		if (level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
+
+		if (level.getBlockEntity(pos) instanceof VaultBlockEntity be && be.storage().isMaxTier()) {
+			VaultLinkItem.bind(stack, level, pos);
+			player.displayClientMessage(Component.literal("Vault Link bound"), true);
+			return InteractionResult.SUCCESS;
+		}
+
+		player.displayClientMessage(Component.literal("Only a fully upgraded vault can be linked"), true);
+		return super.useItemOn(stack, state, level, pos, player, hand, hit);
 	}
 
 	@Override

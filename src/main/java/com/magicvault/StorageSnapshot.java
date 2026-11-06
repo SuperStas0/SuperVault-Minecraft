@@ -58,6 +58,11 @@ public record StorageSnapshot(int upgrades, int unlockedCells, int goldLevel, Li
 		return upgrades != 0 || unlockedCells != START_CELLS || goldLevel != 0;
 	}
 
+	/** Every upgrade bought: all cells, iron, all gold levels and diamond. */
+	public boolean isMaxTier() {
+		return unlockedCells >= MAX_CELLS && has(UP_IRON) && goldLevel >= GOLD_MAX && has(UP_DIAMOND);
+	}
+
 	/** Iron and gold become available once every cell is unlocked. */
 	private boolean cellsDone() {
 		return unlockedCells >= MAX_CELLS;

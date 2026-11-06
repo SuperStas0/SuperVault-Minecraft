@@ -3,6 +3,7 @@ package com.magicvault;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,20 +27,35 @@ public class VaultMenu extends AbstractContainerMenu {
 	@Nullable
 	private final VaultStorage storage;
 	private int lastSentVersion = -1;
+	/** Opened through a Vault Link: no distance limit, and the vault's chunk is kept loaded. */
+	private final boolean remote;
+	private int ticketCountdown = 0;
 
 	/** Client-side copy of the vault state, updated by {@link SyncPayload}. */
 	public StorageSnapshot view = StorageSnapshot.EMPTY;
 
 	public VaultMenu(int syncId, Inventory inventory, BlockPos pos) {
+		this(syncId, inventory, pos, null);
+	}
+
+	/** {@code remoteVault} is only set on the server, when opened through a Vault Link (it may be in another dimension). */
+	public VaultMenu(int syncId, Inventory inventory, BlockPos pos, @Nullable VaultBlockEntity remoteVault) {
 		super(MagicVault.VAULT_MENU, syncId);
 		this.player = inventory.player;
 		Level level = inventory.player.level();
-		this.access = ContainerLevelAccess.create(level, pos);
+		this.remote = remoteVault != null;
 
-		if (!level.isClientSide() && level.getBlockEntity(pos) instanceof VaultBlockEntity be) {
+		if (remoteVault != null) {
+			Level vaultLevel = remoteVault.getLevel();
+			this.access = ContainerLevelAccess.create(vaultLevel != null ? vaultLevel : level, pos);
+			this.blockEntity = remoteVault;
+			this.storage = remoteVault.storage();
+		} else if (!level.isClientSide() && level.getBlockEntity(pos) instanceof VaultBlockEntity be) {
+			this.access = ContainerLevelAccess.create(level, pos);
 			this.blockEntity = be;
 			this.storage = be.storage();
 		} else {
+			this.access = ContainerLevelAccess.create(level, pos);
 			this.blockEntity = null;
 			this.storage = null;
 		}
@@ -59,6 +75,12 @@ public class VaultMenu extends AbstractContainerMenu {
 	public void broadcastChanges() {
 		super.broadcastChanges();
 
+		if (remote && blockEntity != null && !blockEntity.isRemoved() && blockEntity.getLevel() instanceof ServerLevel vaultLevel
+			&& ticketCountdown-- <= 0) {
+			ticketCountdown = 20;
+			VaultLinkItem.keepLoaded(vaultLevel, blockEntity.getBlockPos());
+		}
+
 		if (storage != null && player instanceof ServerPlayer sp && storage.version() != lastSentVersion) {
 			lastSentVersion = storage.version();
 			ServerPlayNetworking.send(sp, new SyncPayload(containerId, storage.snapshot(true)));
@@ -67,7 +89,7 @@ public class VaultMenu extends AbstractContainerMenu {
 
 	/** Server side only. */
 	public void handleAction(ActionPayload payload) {
-		if (storage == null || blockEntity == null) {
+		if (storage == null || blockEntity == null || blockEntity.isRemoved()) {
 			return;
 		}
 
@@ -129,7 +151,7 @@ public class VaultMenu extends AbstractContainerMenu {
 	/** Shift-click on a player inventory slot: deposit into the vault. */
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
-		if (storage == null || blockEntity == null) {
+		if (storage == null || blockEntity == null || blockEntity.isRemoved()) {
 			return ItemStack.EMPTY;
 		}
 
@@ -161,6 +183,10 @@ public class VaultMenu extends AbstractContainerMenu {
 
 	@Override
 	public boolean stillValid(Player player) {
+		if (remote) {
+			return blockEntity != null && !blockEntity.isRemoved();
+		}
+
 		return stillValid(access, player, MagicVault.VAULT_BLOCK);
 	}
 }

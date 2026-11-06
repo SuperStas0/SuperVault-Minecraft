@@ -51,6 +51,10 @@ public final class VaultStorage {
 		return snapshot(false).hasProgress();
 	}
 
+	public boolean isMaxTier() {
+		return snapshot(false).isMaxTier();
+	}
+
 	public int version() {
 		return version;
 	}
