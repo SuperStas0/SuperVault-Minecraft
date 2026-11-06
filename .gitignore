@@ -1,5 +1,6 @@
 # Gradle / Loom
 .gradle/
+.kotlin/
 build/
 run/
 out/
@@ -13,4 +14,15 @@ out/
 .classpath
 .project
 .settings/
+.factorypath
 bin/
+
+# Logs / crash dumps / tool leftovers
+*.log
+hs_err_pid*
+replay_pid*
+javac.*.args
+
+# OS
+.DS_Store
+Thumbs.db
