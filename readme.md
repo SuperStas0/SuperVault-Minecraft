@@ -1,38 +1,18 @@
 # Super Vault
 
-Fabric mod for Minecraft, strongly inspired by Terraria's Magic Storage.
-
-Adds an upgradable vault that keeps practically infinite items, with search and filter tabs, and a Vault Link that opens a maxed vault from anywhere.
+Fabric mod, strongly inspired by Terraria's Magic Storage: an upgradable vault that keeps practically infinite items, with search, filter tabs and a Vault Link that opens a max tier vault from anywhere.
 
 # Installation
-
 Requirements:
 - Minecraft 1.21.11
 - Fabric Loader 0.18.0+
 - Fabric API
 
-Download the `.jar` and put it in the `mods` folder. Install it on the server and on every client.
+1. Download the `.jar`.
+2. Put it in the `mods` folder.
+3. Repeat on the server and on every client.
 
-# Crafting
-
-**Super Vault**
-
-```
-Coal    Iron     Gold
-Copper  Diamond  Copper
-Gold    Iron     Coal
-```
-
-**Vault Link**
-
-```
-        Diamond
-Diamond Eye of Ender Diamond
-        Diamond
-```
-
-# Using the vault
-
+# Usage
 Each cell holds one item type. Cells are shown in registry order.
 
 | Action | Result |
@@ -46,8 +26,22 @@ Each cell holds one item type. Cells are shown in registry order.
 
 Search bar: matches item names. `@name` matches the mod namespace, e.g. `@minecraft`. Choosing another tab clears the search.
 
-# Upgrades
+# Crafting
+## Super Vault
+```
+Coal    Iron     Gold
+Copper  Diamond  Copper
+Gold    Iron     Coal
+```
 
+## Vault Link
+```
+        Diamond
+Diamond Eye of Ender Diamond
+        Diamond
+```
+
+# Upgrades
 Buttons appear on the right side of the vault. Upgrades are paid with items stored inside the vault.
 
 | Upgrade | Cost | Effect |
@@ -64,7 +58,6 @@ Max tier means every upgrade above is bought.
 Breaking a vault returns the vault item with its upgrades. With Iron or any Gold level the contents stay inside the item, like a shulker box. Otherwise they drop as normal items. Explosions cannot destroy a vault.
 
 # Vault Link
-
 Opens a max tier vault from any distance and from any dimension.
 
 1. Right-click a max tier vault with the Vault Link to bind it. Other vaults cannot be linked.
@@ -76,28 +69,28 @@ Notes:
 - Binding again replaces the old target.
 - Anyone holding the link can open the vault.
 
+# Development
+- `gradlew runClient`: start a development client
+- `gradlew runServer`: start a development server
+
 # Building
+Requirements:
+- Java 21
+- Internet (the first build downloads dependencies)
 
-Requirements: Java 21, internet (first build downloads dependencies).
-
-Keep the project path plain: letters, digits, `_`, `-` and `.` only. `build.bat` refuses to run otherwise.
-- `!` breaks the build with `Provider "jar" not found` (e.g. `C:\home\!\...`).
-- Non-ASCII characters are a known Fabric tooling problem.
-- Spaces and other special characters are avoided as a precaution.
-
-The same applies to the Gradle home (`%USERPROFILE%\.gradle`). If your user name breaks it, set the `GRADLE_USER_HOME` environment variable to a plain path.
-
-Run `build.bat [-c] [-i] [-r] [-h]` from the project directory. The build always runs, flags add steps and combine in any order, e.g. `build.bat -cir`.
+Run `build.bat [-c] [-i] [-r] [-n] [-h]`. Flags combine in any order, e.g. `build.bat -cir`.
 
 | Flag | Action |
 | --- | --- |
 | `-c` | Clean: delete previous build output first |
-| `-i` | Install: copy the jar to `%APPDATA%\.minecraft\mods`, replacing older versions |
-| `-r` | Release: copy the jar to `release/` |
+| `-i` | Install: copy the build to `%APPDATA%\.minecraft\mods`, replacing older versions |
+| `-r` | Release: package the build into `release\` (the jar, replacing older versions) |
+| `-n` | Nobuild: skip the build and reuse the existing output (needs `-i` and/or `-r`, not with `-c`) |
 | `-h` | Show help, no build |
 
-Output: `build/libs/supervault-<version>.jar`. Without the script: `gradlew build`. Development client and server: `gradlew runClient`, `gradlew runServer`.
+The project path and `%USERPROFILE%\.gradle` (override with `GRADLE_USER_HOME`) may contain only letters, digits, `_`, `-` and `.`, since `!` and non-ASCII characters break the Fabric build; `build.bat` checks the project path.
+
+Build output: `build\libs\supervault-<version>.jar`
 
 # License
-
-MIT
+- [MIT](LICENSE.md)

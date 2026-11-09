@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "magicvault:vault"
-  ]
+    "replace": false,
+    "values": [
+        "magicvault:vault"
+    ]
 }

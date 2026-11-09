@@ -1,5 +1,5 @@
 {
-  "block.magicvault.vault": "Super Vault",
-  "item.magicvault.vault": "Super Vault",
-  "item.magicvault.vault_link": "Vault Link"
+    "block.magicvault.vault": "Super Vault",
+    "item.magicvault.vault": "Super Vault",
+    "item.magicvault.vault_link": "Vault Link"
 }

@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "magicvault:item/vault_link"
-  }
+    "model": {
+        "type": "minecraft:model",
+        "model": "magicvault:item/vault_link"
+    }
 }
